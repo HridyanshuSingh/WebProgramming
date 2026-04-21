@@ -1,0 +1,82 @@
+/* General Page Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background-color: #f4f6f9;
+}
+
+/* Hero Section */
+.hero {
+    background-color: #1e3a8a;
+    color: white;
+    text-align: center;
+    padding: 60px 20px;
+}
+
+/* Section Common Styling */
+section {
+    padding: 40px 20px;
+    margin: 20px;
+    background-color: white;
+    border-radius: 8px;
+}
+
+/* Section Headings */
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Services Section */
+.service-container {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.service-card {
+    background-color: #e0e7ff;
+    padding: 20px;
+    width: 250px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Testimonials */
+.testimonial {
+    background-color: #f1f5f9;
+    padding: 15px;
+    margin: 15px auto;
+    max-width: 500px;
+    border-left: 5px solid #1e3a8a;
+}
+
+/* Contact Form */
+form {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    margin: auto;
+}
+
+input, textarea {
+    padding: 10px;
+    margin: 8px 0;
+}
+
+button {
+    padding: 10px;
+    background-color: #1e3a8a;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #1e3a8a;
+    color: white;
+}

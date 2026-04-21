@@ -1,0 +1,41 @@
+<!--
+Project Title: Dynamic To-Do List Tasks
+Name: Hridyanshu Singh
+Date: 13-02-2026
+Description: A simple to-do list application where users can add, edit,
+delete, and mark tasks as completed.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dynamic To-Do List</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>My To-Do List Tasks</h1>
+        <h3 class="subtitle">Stay organized, stay productive!</h3>
+        <p class="description">
+            This application allows you to add, edit, delete,
+            and mark tasks as completed.
+        </p>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <input type="text" id="taskInput" placeholder="Enter a new task">
+            <button onclick="addTask()">Add Task</button>
+        </div>
+
+        <!-- Task Counter -->
+        <p id="taskCounter">Pending: 0 | Completed: 0</p>
+
+        <!-- Task List -->
+        <ul id="taskList"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

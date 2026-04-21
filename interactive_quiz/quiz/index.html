@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Project Title: Interactive Quiz Single File -->
+    <!-- Name: Your Name -->
+    <!-- Date: DD-MM-YYYY -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f2f2f2;
+            margin: 0;
+        }
+
+        header {
+            background: #333;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .quiz-container, .result-container {
+            width: 90%;
+            max-width: 600px;
+            margin: 40px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        #options button {
+            width: 100%;
+            padding: 10px;
+            margin: 8px 0;
+            border: none;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #options button:hover {
+            background: #0056b3;
+        }
+
+        #nextBtn, #restartBtn {
+            margin-top: 15px;
+            padding: 10px 18px;
+            border: none;
+            background: #28a745;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>Interactive Quiz</h1>
+    <p>Answer the questions and test your knowledge.</p>
+</header>
+
+<div class="quiz-container" id="quizBox">
+    <h2 id="question">Question text</h2>
+    <div id="options"></div>
+    <button id="nextBtn">Next</button>
+</div>
+
+<div class="result-container hidden" id="resultBox">
+    <h2>Quiz Result</h2>
+    <p id="scoreText"></p>
+    <p id="message"></p>
+    <button id="restartBtn">Restart Quiz</button>
+</div>
+
+<script>
+const quizData = [
+  {
+    question: "Which is used to create webpage structure?",
+    options: ["HTML", "CSS", "Python", "Java"],
+    correct: 0
+  },
+  {
+    question: "Which is used for webpage styling?",
+    options: ["HTML", "CSS", "C++", "SQL"],
+    correct: 1
+  },
+  {
+    question: "Which makes webpage interactive?",
+    options: ["JavaScript", "HTML", "CSS", "Word"],
+    correct: 0
+  }
+];
+
+let currentQuestion = 0;
+let score = 0;
+let selected = null;
+
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+const nextBtn = document.getElementById("nextBtn");
+const resultBox = document.getElementById("resultBox");
+const quizBox = document.getElementById("quizBox");
+const scoreText = document.getElementById("scoreText");
+const messageText = document.getElementById("message");
+const restartBtn = document.getElementById("restartBtn");
+
+function loadQuestion() {
+  selected = null;
+  const q = quizData[currentQuestion];
+  questionEl.textContent = q.question;
+  optionsEl.innerHTML = "";
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement("button");
+    btn.textContent = opt;
+    btn.onclick = () => selected = i;
+    optionsEl.appendChild(btn);
+  });
+}
+
+nextBtn.onclick = () => {
+  if (selected === null) {
+    alert("Please select an option");
+    return;
+  }
+
+  if (selected === quizData[currentQuestion].correct) score++;
+
+  currentQuestion++;
+
+  if (currentQuestion < quizData.length) {
+    loadQuestion();
+  } else {
+    showResult();
+  }
+};
+
+function showResult() {
+  quizBox.classList.add("hidden");
+  resultBox.classList.remove("hidden");
+
+  scoreText.textContent = `Score: ${score} / ${quizData.length}`;
+
+  if (score === quizData.length) messageText.textContent = "Excellent!";
+  else if (score >= 2) messageText.textContent = "Good Job!";
+  else messageText.textContent = "Try Again";
+}
+
+restartBtn.onclick = () => {
+  currentQuestion = 0;
+  score = 0;
+  resultBox.classList.add("hidden");
+  quizBox.classList.remove("hidden");
+  loadQuestion();
+};
+
+loadQuestion();
+</script>
+
+</body>
+</html>

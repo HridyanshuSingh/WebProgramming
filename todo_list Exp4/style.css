@@ -1,0 +1,134 @@
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #dbeafe;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Main container */
+.container {
+    background: white;
+    padding: 25px;
+    width: 420px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    transition: 0.3s;
+}
+
+/* Heading */
+h1{
+    text-align: center;
+    font-size: 28px;
+    letter-spacing: 1px;
+    color: #4f46e5;
+    margin-bottom: 5px;
+}
+h1{
+    text-align: center;
+    position: relative;
+}
+h1::after{
+    content: "";
+    display: block;
+    width: 60px;
+    height: 4px;
+    background: #6366f1;
+    margin: 8px auto 0;
+    border-radius: 5px;
+}
+h1 {
+    text-align: center;
+     font-size: 28px;
+     background: linear-gradient(to right,#667eea,#764ba2);
+     -webkit-background-clip: text;
+     -webkit-text-fill-color: transparent;
+}
+
+/* Description */
+.description {
+    text-align: center;
+    font-size: 14px;
+    color: gray;
+}
+
+/* Input section */
+.input-section {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+/* Input box */
+input {
+    flex: 1;
+    padding: 8px;
+}
+
+/* Button */
+button {
+    padding: 8px 14px;
+    cursor: pointer;
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 20px;
+    transition: 0.3s;
+}
+
+button:hover {
+    background-color: #4338ca;
+    transform: translateY(-2px);
+}
+
+/* Task list */
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Each task */
+li {
+    background: #f9f9f9;
+    margin-bottom: 10px;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+    transition: 0.3s;
+}
+li:hover{
+    background-color: #e0f2fe;
+    transform: scale(1.02);
+}
+
+/* Completed task */
+.completed {
+    text-decoration: line-through;
+    color: rgb(128, 128, 128);
+}
+
+/* Small buttons inside list */
+.task-buttons button {
+    margin-left: 5px;
+    padding: 4px 8px;
+    font-size: 12px;
+}
+/* Subtitle*/
+.subtitle{
+    text-align: center;
+    font-weight: normal;
+    color: gray;
+    font-size: 14px;
+    margin-top: -5px;
+}
+#taskCounter {
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #444;
+}

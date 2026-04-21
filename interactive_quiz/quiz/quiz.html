@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Project Title: Interactive Quiz Application -->
+    <!-- Name: Your Name -->
+    <!-- Date: DD-MM-YYYY -->
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz</title>
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 25px;
+            color: white;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.2rem;
+        }
+
+        header p {
+            opacity: 0.9;
+        }
+
+        .card {
+            background: white;
+            width: 90%;
+            max-width: 650px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 20px;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from {opacity:0; transform: translateY(20px);} 
+            to {opacity:1; transform: translateY(0);} 
+        }
+
+        #question {
+            margin-bottom: 20px;
+        }
+
+        .option {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 8px;
+            background: #eef2ff;
+            cursor: pointer;
+            font-size: 15px;
+            transition: 0.2s;
+        }
+
+        .option:hover {
+            background: #dbe4ff;
+        }
+
+        .selected {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn {
+            margin-top: 15px;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background: #667eea;
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            width: 100%;
+        }
+
+        .btn:hover {
+            background: #5563d6;
+        }
+
+        .hidden { display: none; }
+
+        .score {
+            font-size: 1.4rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <h1>🌟 Interactive Quiz</h1>
+    <p>Test your knowledge and see your score instantly!</p>
+</header>
+
+<div class="card" id="quizBox">
+    <h2 id="question"></h2>
+    <div id="options"></div>
+    <button class="btn" id="nextBtn">Next Question</button>
+</div>
+
+<div class="card hidden" id="resultBox">
+    <h2>🎉 Quiz Completed</h2>
+    <p class="score" id="scoreText"></p>
+    <p id="message"></p>
+    <button class="btn" id="restartBtn">Restart Quiz</button>
+</div>
+
+<script>
+const quizData = [
+    {
+        question: "Which language is used to create webpage structure?",
+        options: ["HTML", "CSS", "Python", "Java"],
+        correct: 0
+    },
+    {
+        question: "Which language is used for styling web pages?",
+        options: ["HTML", "CSS", "C++", "SQL"],
+        correct: 1
+    },
+    {
+        question: "Which language makes web pages interactive?",
+        options: ["JavaScript", "HTML", "CSS", "Excel"],
+        correct: 0
+    },
+    {
+        question: "Which tag is used for largest heading?",
+        options: ["h6", "h1", "head", "title"],
+        correct: 1
+    },
+    {
+        question: "Which CSS property changes text color?",
+        options: ["font-style", "color", "text-align", "background"],
+        correct: 1
+    }
+];
+
+let current = 0;
+let score = 0;
+let selected = null;
+
+const qEl = document.getElementById("question");
+const optEl = document.getElementById("options");
+const nextBtn = document.getElementById("nextBtn");
+const resultBox = document.getElementById("resultBox");
+const quizBox = document.getElementById("quizBox");
+const scoreText = document.getElementById("scoreText");
+const msg = document.getElementById("message");
+const restartBtn = document.getElementById("restartBtn");
+
+function loadQuestion(){
+    selected = null;
+    const q = quizData[current];
+    qEl.textContent = q.question;
+    optEl.innerHTML = "";
+
+    q.options.forEach((op,i)=>{
+        const btn = document.createElement("button");
+        btn.textContent = op;
+        btn.className = "option";
+        btn.onclick = ()=>{
+            selected = i;
+            document.querySelectorAll(".option").forEach(b=>b.classList.remove("selected"));
+            btn.classList.add("selected");
+        };
+        optEl.appendChild(btn);
+    });
+}
+
+nextBtn.onclick = ()=>{
+    if(selected === null){ alert("Please select an option"); return; }
+
+    if(selected === quizData[current].correct) score++;
+
+    current++;
+
+    if(current < quizData.length) loadQuestion();
+    else showResult();
+}
+
+function showResult(){
+    quizBox.classList.add("hidden");
+    resultBox.classList.remove("hidden");
+
+    scoreText.textContent = `Your Score: ${score} / ${quizData.length}`;
+
+    if(score === quizData.length) msg.textContent = "Excellent Work! 🌟";
+    else if(score >= quizData.length/2) msg.textContent = "Good Job 👍";
+    else msg.textContent = "Keep Practicing 💪";
+}
+
+restartBtn.onclick = ()=>{
+    current = 0;
+    score = 0;
+    resultBox.classList.add("hidden");
+    quizBox.classList.remove("hidden");
+    loadQuestion();
+}
+
+loadQuestion();
+</script>
+
+</body>
+</html>
