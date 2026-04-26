@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}EventHub — All Events{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+  <div class="section-container">
+    <h1>Browse All Events</h1>
+    <p>Discover upcoming events and register your spot today</p>
+  </div>
+</section>
+
+<!-- ── Search & Filter Bar (Task 6 – Bonus) ─────────────────────────────── -->
+<section class="search-filter-bar">
+  <div class="section-container">
+    <div class="search-filter-row">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" class="search-input" placeholder="Search events by name, venue…" />
+      </div>
+      <div class="filter-buttons" id="filterButtons">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="Technology">Technology</button>
+        <button class="filter-btn" data-category="Music">Music</button>
+        <button class="filter-btn" data-category="Business">Business</button>
+        <button class="filter-btn" data-category="Art">Art</button>
+        <button class="filter-btn" data-category="Health">Health</button>
+      </div>
+    </div>
+    <p id="resultCount" class="result-count">Showing {{ events|length }} events</p>
+  </div>
+</section>
+
+<!-- ── Events Grid ───────────────────────────────────────────────────────── -->
+<section class="events-section">
+  <div class="section-container">
+    <div class="events-grid" id="eventsGrid">
+      {% for event in events %}
+      <article class="event-card" data-name="{{ event.name|lower }}" data-venue="{{ event.venue|lower }}" data-category="{{ event.category }}">
+        <figure class="event-card-img">
+          <img src="{{ event.image_url }}" alt="{{ event.name }}" loading="lazy" />
+          <span class="event-category-badge">{{ event.category }}</span>
+        </figure>
+        <div class="event-card-body">
+          <h3 class="event-card-title">{{ event.name }}</h3>
+          <p class="event-meta">📅 {{ event.date }} &nbsp;|&nbsp; ⏰ {{ event.time }}</p>
+          <p class="event-meta">📍 {{ event.venue }}</p>
+          <p class="event-desc">{{ event.description }}</p>
+          <div class="event-card-footer">
+            <span class="rsvp-badge">👥 {{ event.rsvp_count }} attending</span>
+            <a href="{{ url_for('register', event_id=event.id) }}" class="btn btn-primary btn-sm">Register</a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+    <p id="noResults" class="no-results" style="display:none;">No events match your search. Try a different keyword.</p>
+  </div>
+</section>
+
+{% endblock %}

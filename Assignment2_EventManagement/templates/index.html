@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% block title %}EventHub — Home{% endblock %}
+
+{% block content %}
+
+<!-- ── Hero Section ────────────────────────────────────────────────────────── -->
+<section class="hero">
+  <div class="hero-content">
+    <span class="hero-badge">🎉 Discover Amazing Events</span>
+    <h1 class="hero-title">Find, Register &amp; Manage<br><span class="gradient-text">Events Near You</span></h1>
+    <p class="hero-subtitle">
+      EventHub is your one-stop platform to discover exciting events, register in seconds,
+      and manage your schedule with ease.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('event_list') }}" class="btn btn-primary btn-lg">Browse Events 🎟️</a>
+      <a href="{{ url_for('register') }}"   class="btn btn-outline btn-lg">Register Now</a>
+    </div>
+    <div class="hero-stats">
+      <div class="stat"><span class="stat-num">{{ featured_events|length + 2 }}+</span><span class="stat-label">Events</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">500+</span><span class="stat-label">Registrations</span></div>
+      <div class="stat-divider"></div>
+      <div class="stat"><span class="stat-num">50+</span><span class="stat-label">Venues</span></div>
+    </div>
+  </div>
+  <div class="hero-illustration">
+    <div class="hero-card-float card-1">🎤 Tech Summit</div>
+    <div class="hero-card-float card-2">🎵 Music Fest</div>
+    <div class="hero-card-float card-3">🎨 Art Expo</div>
+  </div>
+</section>
+
+<!-- ── Features ────────────────────────────────────────────────────────────── -->
+<section class="features-section">
+  <div class="section-container">
+    <h2 class="section-title">Why Choose EventHub?</h2>
+    <div class="features-grid">
+      <article class="feature-card">
+        <span class="feature-icon">🔍</span>
+        <h3>Easy Discovery</h3>
+        <p>Browse events by category, date, or venue with powerful search and filter tools.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">⚡</span>
+        <h3>Quick Registration</h3>
+        <p>Register for any event in under 60 seconds with our streamlined form.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">🛡️</span>
+        <h3>Admin Control</h3>
+        <p>Full CRUD capabilities for organizers to manage events effortlessly.</p>
+      </article>
+      <article class="feature-card">
+        <span class="feature-icon">📱</span>
+        <h3>Mobile Friendly</h3>
+        <p>Fully responsive design that works perfectly on any device or screen size.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ── Featured Events ──────────────────────────────────────────────────────── -->
+<section class="featured-section">
+  <div class="section-container">
+    <div class="section-header">
+      <h2 class="section-title">Featured Events</h2>
+      <a href="{{ url_for('event_list') }}" class="btn btn-outline">View All →</a>
+    </div>
+    <div class="events-grid">
+      {% for event in featured_events %}
+      <article class="event-card">
+        <figure class="event-card-img">
+          <img src="{{ event.image_url }}" alt="{{ event.name }}" loading="lazy" />
+          <span class="event-category-badge">{{ event.category }}</span>
+        </figure>
+        <div class="event-card-body">
+          <h3 class="event-card-title">{{ event.name }}</h3>
+          <p class="event-meta"><span>📅</span> {{ event.date }} &nbsp;|&nbsp; <span>⏰</span> {{ event.time }}</p>
+          <p class="event-meta"><span>📍</span> {{ event.venue }}</p>
+          <p class="event-desc">{{ event.description }}</p>
+          <div class="event-card-footer">
+            <span class="rsvp-badge">👥 {{ event.rsvp_count }} attending</span>
+            <a href="{{ url_for('register', event_id=event.id) }}" class="btn btn-primary btn-sm">Register</a>
+          </div>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% endblock %}

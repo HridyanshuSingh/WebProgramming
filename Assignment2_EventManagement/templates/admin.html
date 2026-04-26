@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% block title %}EventHub — Admin Panel{% endblock %}
+
+{% block content %}
+
+<section class="page-header">
+  <div class="section-container">
+    <h1>🛠️ Admin Panel</h1>
+    <p>Manage all events from one place</p>
+  </div>
+</section>
+
+<div class="admin-layout">
+
+  <!-- ── Add New Event Form ────────────────────────────────────────────── -->
+  <section class="admin-form-section">
+    <div class="admin-card">
+      <h2>➕ Add New Event</h2>
+      <form method="POST" action="{{ url_for('admin_add') }}" id="addEventForm">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Event Name *</label>
+            <input type="text" name="name" class="form-input" placeholder="Event title" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select name="category" class="form-input form-select">
+              <option>Technology</option>
+              <option>Music</option>
+              <option>Business</option>
+              <option>Art</option>
+              <option>Health</option>
+              <option>General</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date *</label>
+            <input type="date" name="date" class="form-input" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time</label>
+            <input type="text" name="time" class="form-input" placeholder="e.g. 10:00 AM" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Venue *</label>
+          <input type="text" name="venue" class="form-input" placeholder="Venue name and address" required />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Description</label>
+          <textarea name="description" class="form-input form-textarea" rows="3" placeholder="Short description of the event…"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Image URL</label>
+          <input type="url" name="image_url" class="form-input" placeholder="https://…" />
+        </div>
+
+        <button type="submit" class="btn btn-primary">Add Event ✅</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ── Events Table ──────────────────────────────────────────────────── -->
+  <section class="admin-table-section">
+    <div class="admin-card">
+      <h2>📋 All Events ({{ events|length }})</h2>
+      {% if events %}
+      <div class="table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Venue</th>
+              <th>Category</th>
+              <th>RSVPs</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for event in events %}
+            <tr>
+              <td>{{ event.id }}</td>
+              <td>{{ event.name }}</td>
+              <td>{{ event.date }}</td>
+              <td>{{ event.venue }}</td>
+              <td><span class="event-category-badge small">{{ event.category }}</span></td>
+              <td>{{ event.rsvp_count }}</td>
+              <td class="action-cell">
+                <a href="{{ url_for('admin_edit', event_id=event.id) }}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{{ url_for('admin_delete', event_id=event.id) }}" class="btn btn-sm btn-danger"
+                   onclick="return confirm('Delete \'{{ event.name }}\'?')">Delete</a>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="empty-msg">No events yet. Add one above!</p>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- ── Registrations Table ───────────────────────────────────────────── -->
+  <section class="admin-table-section">
+    <div class="admin-card">
+      <h2>👥 Registrations ({{ registrations|length }})</h2>
+      {% if registrations %}
+      <div class="table-wrapper">
+        <table class="admin-table">
+          <thead>
+            <tr><th>Name</th><th>Email</th><th>Phone</th><th>Event ID</th><th>Tickets</th></tr>
+          </thead>
+          <tbody>
+            {% for reg in registrations %}
+            <tr>
+              <td>{{ reg.name }}</td>
+              <td>{{ reg.email }}</td>
+              <td>{{ reg.phone }}</td>
+              <td>{{ reg.event_id }}</td>
+              <td>{{ reg.tickets }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+        <p class="empty-msg">No registrations yet.</p>
+      {% endif %}
+    </div>
+  </section>
+
+</div>
+
+{% endblock %}
