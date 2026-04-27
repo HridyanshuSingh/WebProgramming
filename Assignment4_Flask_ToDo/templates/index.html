@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block title %}My Tasks — Flask To-Do{% endblock %}
+
+{% block content %}
+
+<!-- ===== INPUT PANEL ===== -->
+<section class="input-panel">
+  <h2>Add New Task</h2>
+  <div class="input-row">
+    <input type="text" id="task-title" placeholder="Task title (required)" autocomplete="off" />
+    <select id="task-priority">
+      <option value="low">🟢 Low</option>
+      <option value="medium" selected>🟠 Medium</option>
+      <option value="high">🔴 High</option>
+    </select>
+  </div>
+  <textarea id="task-description" placeholder="Description (optional)" rows="2"></textarea>
+  <div class="input-actions">
+    <span class="error-msg" id="title-error"></span>
+    <button class="btn btn-add" id="add-task-btn">+ Add Task</button>
+  </div>
+</section>
+
+<!-- ===== TASK COUNTER ===== -->
+<section class="counter-bar">
+  <div class="counter-badge counter-total">
+    <span class="counter-num" id="count-total">0</span>
+    <span class="counter-label">Total</span>
+  </div>
+  <div class="counter-badge counter-active">
+    <span class="counter-num" id="count-active">0</span>
+    <span class="counter-label">Active</span>
+  </div>
+  <div class="counter-badge counter-completed">
+    <span class="counter-num" id="count-completed">0</span>
+    <span class="counter-label">Completed</span>
+  </div>
+</section>
+
+<!-- ===== FILTER BAR ===== -->
+<section class="filter-bar">
+  <button class="btn btn-filter active" data-filter="all" onclick="filterTasks('all')">All Tasks</button>
+  <button class="btn btn-filter" data-filter="active" onclick="filterTasks('active')">Active</button>
+  <button class="btn btn-filter" data-filter="completed" onclick="filterTasks('completed')">Completed</button>
+</section>
+
+<!-- ===== GLOBAL ERROR ===== -->
+<div class="global-error" id="global-error"></div>
+
+<!-- ===== TASK LIST ===== -->
+<section id="task-list">
+  <!-- Injected dynamically by JavaScript -->
+</section>
+
+{% endblock %}

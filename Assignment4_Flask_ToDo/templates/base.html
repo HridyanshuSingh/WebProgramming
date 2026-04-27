@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Flask To-Do App{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+
+  <!-- Sticky navigation bar -->
+  <nav class="navbar">
+    <div class="nav-brand">📝 Flask To-Do</div>
+    <div class="nav-badge" id="nav-task-count">0 tasks</div>
+  </nav>
+
+  <!-- Main page content injected by child templates -->
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+
+  <script defer src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
