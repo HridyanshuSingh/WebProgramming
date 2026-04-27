@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Post — Simple Blog{% endblock %}
+
+{% block content %}
+<div class="form-page">
+
+  <div class="form-header">
+    <h1 class="form-title">Edit Post</h1>
+    <p class="form-sub">Update the fields below and save your changes.</p>
+  </div>
+
+  <!-- POST to /edit/<id> — pre-filled with existing post data -->
+  <form class="post-form" action="{{ url_for('edit', post_id=post.id) }}" method="POST">
+
+    <div class="field-group">
+      <label class="field-label" for="title">Post Title</label>
+      <input
+        class="field-input"
+        type="text"
+        id="title"
+        name="title"
+        value="{{ post.title }}"
+        required
+        autofocus
+      />
+    </div>
+
+    <div class="field-group">
+      <label class="field-label" for="content">Content</label>
+      <textarea
+        class="field-textarea"
+        id="content"
+        name="content"
+        rows="10"
+        required
+      >{{ post.content }}</textarea>
+    </div>
+
+    <div class="form-footer">
+      <a href="{{ url_for('index') }}" class="btn btn-secondary">← Cancel</a>
+      <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+
+  </form>
+</div>
+{% endblock %}

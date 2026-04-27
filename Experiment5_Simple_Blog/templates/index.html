@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Home — Simple Blog{% endblock %}
+
+{% block content %}
+<section class="hero">
+  <h1 class="hero-title">The Blog</h1>
+  <p class="hero-sub">Thoughts, ideas &amp; experiments in plain text.</p>
+</section>
+
+<section class="posts-section">
+
+  {% if posts %}
+    <p class="post-count">{{ posts|length }} post{{ 's' if posts|length != 1 }}</p>
+
+    <div class="posts-grid">
+      {% for post in posts %}
+      <article class="post-card">
+        <!-- Post number badge -->
+        <span class="post-num">#{{ loop.index }}</span>
+
+        <h2 class="post-title">{{ post.title }}</h2>
+        <p class="post-body">{{ post.content }}</p>
+
+        <!-- Action buttons -->
+        <div class="post-actions">
+          <a href="{{ url_for('edit', post_id=post.id) }}" class="btn btn-edit">Edit</a>
+
+          <!-- Delete requires a tiny confirm to avoid accidents -->
+          <a href="{{ url_for('delete', post_id=post.id) }}"
+             class="btn btn-delete"
+             onclick="return confirm('Delete this post?');">Delete</a>
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+
+  {% else %}
+    <!-- Empty state -->
+    <div class="empty-state">
+      <p class="empty-icon">📝</p>
+      <p>No posts yet. <a href="{{ url_for('create') }}">Write the first one →</a></p>
+    </div>
+  {% endif %}
+
+</section>
+{% endblock %}

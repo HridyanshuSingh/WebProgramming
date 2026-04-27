@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}Simple Blog{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+
+  <!-- ===== Navigation Bar ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a href="{{ url_for('index') }}" class="logo">
+        <span class="logo-ink">✒</span> SimpleBlog
+      </a>
+      <nav class="nav-links">
+        <a href="{{ url_for('index') }}"  class="nav-link">Home</a>
+        <a href="{{ url_for('create') }}" class="nav-link nav-cta">+ New Post</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Flash / Alert area (reserved) ===== -->
+
+  <!-- ===== Main Content ===== -->
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <p>Simple Blog &mdash; Flask CRUD Experiment &bull; {{ 2026 }}</p>
+  </footer>
+
+</body>
+</html>
