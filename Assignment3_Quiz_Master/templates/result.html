@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Master - Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page result-page">
+        <div class="result-hero">
+            <div class="score-ring {{ feedback_class }}">
+                <svg viewBox="0 0 120 120" class="ring-svg">
+                    <circle cx="60" cy="60" r="50" class="ring-bg"/>
+                    <circle cx="60" cy="60" r="50" class="ring-fill"
+                        stroke-dasharray="{{ ((score / total) * 314)|round(1) }} 314"/>
+                </svg>
+                <div class="score-inner">
+                    <span class="score-num">{{ score }}</span>
+                    <span class="score-sep">/</span>
+                    <span class="score-tot">{{ total }}</span>
+                </div>
+            </div>
+
+            <h2 class="feedback-msg">{{ feedback }}</h2>
+            <p class="score-pct">You scored <strong>{{ ((score / total) * 100)|round|int }}%</strong></p>
+
+            <div class="result-actions">
+                <a href="/quiz" class="btn-restart">🔄 Restart Quiz</a>
+                <a href="/" class="btn-home">🏠 Home</a>
+            </div>
+        </div>
+
+        <div class="review-section">
+            <h3 class="review-title">Answer Review</h3>
+            {% for r in results %}
+            <div class="review-card {{ 'correct' if r.is_correct else 'wrong' }}">
+                <div class="review-header">
+                    <span class="review-icon">{{ '✓' if r.is_correct else '✗' }}</span>
+                    <span class="review-q">{{ loop.index }}. {{ r.question }}</span>
+                </div>
+                <div class="review-answers">
+                    <div class="your-answer">
+                        <span class="ans-label">Your Answer:</span>
+                        <span class="ans-val {{ 'correct-ans' if r.is_correct else 'wrong-ans' }}">{{ r.user_answer }}</span>
+                    </div>
+                    {% if not r.is_correct %}
+                    <div class="correct-answer">
+                        <span class="ans-label">Correct Answer:</span>
+                        <span class="ans-val correct-ans">{{ r.correct_answer }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="decor-circle c1"></div>
+        <div class="decor-circle c2"></div>
+        <div class="decor-circle c3"></div>
+    </div>
+</body>
+</html>

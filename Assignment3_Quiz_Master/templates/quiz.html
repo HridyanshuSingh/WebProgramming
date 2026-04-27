@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Master - Quiz</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="page quiz-page">
+        <header class="quiz-header">
+            <a href="/" class="back-btn">← Home</a>
+            <div class="quiz-title">Quiz<span class="accent">Master</span></div>
+            <div class="timer-box" id="timer">⏱ <span id="time-display">15:00</span></div>
+        </header>
+
+        <div class="progress-bar-wrap">
+            <div class="progress-bar" id="progress-bar"></div>
+        </div>
+
+        <form action="/quiz" method="POST" class="quiz-form" id="quiz-form">
+            {% for q in questions %}
+            <div class="question-card" id="card-{{ loop.index }}" {% if not loop.first %}style="display:none;"{% endif %}>
+                <div class="q-meta">
+                    <span class="q-num">Question {{ loop.index }} of {{ total }}</span>
+                </div>
+                <h2 class="q-text">{{ q.question }}</h2>
+                <div class="options-grid">
+                    {% for option in q.options %}
+                    <label class="option-label">
+                        <input type="radio" name="q{{ q.id }}" value="{{ option }}" required>
+                        <span class="option-box">
+                            <span class="option-letter">{{ 'ABCD'[loop.index0] }}</span>
+                            <span class="option-text">{{ option }}</span>
+                        </span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+
+            <div class="nav-row">
+                <button type="button" class="btn-nav" id="prev-btn" onclick="changeCard(-1)" disabled>← Prev</button>
+                <div class="dot-nav" id="dot-nav">
+                    {% for q in questions %}
+                    <span class="dot {% if loop.first %}active{% endif %}" data-idx="{{ loop.index0 }}"></span>
+                    {% endfor %}
+                </div>
+                <button type="button" class="btn-nav" id="next-btn" onclick="changeCard(1)">Next →</button>
+                <button type="submit" class="btn-submit" id="submit-btn" style="display:none;">Submit Quiz ✓</button>
+            </div>
+        </form>
+
+        <div class="decor-circle c1"></div>
+        <div class="decor-circle c2"></div>
+    </div>
+
+    <script>
+        const total = {{ total }};
+        let current = 0;
+
+        function changeCard(dir) {
+            const cards = document.querySelectorAll('.question-card');
+            cards[current].style.display = 'none';
+            current += dir;
+            cards[current].style.display = 'block';
+            updateNav();
+            updateProgress();
+        }
+
+        function updateNav() {
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((d, i) => d.classList.toggle('active', i === current));
+
+            document.getElementById('prev-btn').disabled = current === 0;
+            document.getElementById('next-btn').style.display = current === total - 1 ? 'none' : 'inline-flex';
+            document.getElementById('submit-btn').style.display = current === total - 1 ? 'inline-flex' : 'none';
+        }
+
+        function updateProgress() {
+            const pct = ((current + 1) / total) * 100;
+            document.getElementById('progress-bar').style.width = pct + '%';
+        }
+
+        // Dot navigation
+        document.querySelectorAll('.dot').forEach(dot => {
+            dot.addEventListener('click', function () {
+                const cards = document.querySelectorAll('.question-card');
+                cards[current].style.display = 'none';
+                current = parseInt(this.dataset.idx);
+                cards[current].style.display = 'block';
+                updateNav();
+                updateProgress();
+            });
+        });
+
+        // Highlight selected option
+        document.querySelectorAll('.option-label input').forEach(input => {
+            input.addEventListener('change', function () {
+                const siblings = document.querySelectorAll(`input[name="${this.name}"]`);
+                siblings.forEach(s => s.closest('.option-label').classList.remove('selected'));
+                this.closest('.option-label').classList.add('selected');
+            });
+        });
+
+        // Timer: 10 minutes
+        let timeLeft = 900;
+        const timerDisplay = document.getElementById('time-display');
+        const timerBox = document.getElementById('timer');
+        const timerInterval = setInterval(() => {
+            timeLeft--;
+            const m = Math.floor(timeLeft / 60);
+            const s = timeLeft % 60;
+            timerDisplay.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            if (timeLeft <= 60) timerBox.classList.add('urgent');
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                document.getElementById('quiz-form').submit();
+            }
+        }, 1000);
+
+        // Form submit guard
+        document.getElementById('quiz-form').addEventListener('submit', function (e) {
+            clearInterval(timerInterval);
+        });
+
+        updateProgress();
+    </script>
+</body>
+</html>
