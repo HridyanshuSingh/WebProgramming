@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}Contact Manager{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+  <style>
+    /* ── Reset & Variables ──────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0f0f13;
+      --surface:   #1a1a22;
+      --border:    #2e2e3a;
+      --accent:    #e8c547;
+      --accent2:   #5be0a8;
+      --text:      #e8e8f0;
+      --muted:     #7a7a8c;
+      --danger:    #f05a5a;
+      --radius:    10px;
+      --font-head: 'DM Serif Display', serif;
+      --font-body: 'DM Sans', sans-serif;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      min-height: 100vh;
+    }
+
+    /* ── Navbar ─────────────────────────────────────── */
+    nav {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-brand {
+      font-family: var(--font-head);
+      font-size: 1.4rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .nav-brand::before {
+      content: "◈";
+      font-size: 1rem;
+    }
+
+    .nav-links { display: flex; gap: 0.5rem; }
+
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      padding: 0.4rem 0.9rem;
+      border-radius: 6px;
+      transition: background 0.15s, color 0.15s;
+    }
+
+    .nav-links a:hover {
+      background: var(--border);
+      color: var(--text);
+    }
+
+    .nav-links a.active {
+      background: var(--accent);
+      color: #000;
+    }
+
+    /* ── Page wrapper ───────────────────────────────── */
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
+    }
+
+    h1 {
+      font-family: var(--font-head);
+      font-size: 2rem;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .page-subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Cards / Table ──────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead tr {
+      background: #111118;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      text-align: left;
+      padding: 0.85rem 1.2rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    td {
+      padding: 0.9rem 1.2rem;
+      font-size: 0.93rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody tr:last-child td { border-bottom: none; }
+
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+    .td-name  { font-weight: 600; color: var(--text); }
+    .td-phone { color: var(--accent2); font-variant-numeric: tabular-nums; }
+    .td-email { color: var(--muted); }
+
+    /* ── Buttons ────────────────────────────────────── */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      font-family: var(--font-body);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      border: none;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .btn:active { transform: scale(0.97); }
+    .btn:hover  { opacity: 0.85; }
+
+    .btn-primary  { background: var(--accent);  color: #000; }
+    .btn-edit     { background: var(--border);  color: var(--text); }
+    .btn-danger   { background: var(--danger);  color: #fff; }
+    .btn-sm       { padding: 0.3rem 0.7rem; font-size: 0.8rem; }
+
+    /* ── Search bar ─────────────────────────────────── */
+    .search-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .search-row input {
+      flex: 1;
+      min-width: 200px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+
+    .search-row input:focus { border-color: var(--accent); }
+    .search-row input::placeholder { color: var(--muted); }
+
+    /* ── Forms ──────────────────────────────────────── */
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2rem;
+      max-width: 520px;
+    }
+
+    .form-group { margin-bottom: 1.3rem; }
+
+    label {
+      display: block;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="tel"] {
+      width: 100%;
+      background: #111118;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.65rem 1rem;
+      border-radius: 7px;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(232,197,71,0.12);
+    }
+
+    .form-actions { display: flex; gap: 0.75rem; margin-top: 1.8rem; }
+
+    /* ── Alert / Error ──────────────────────────────── */
+    .alert {
+      padding: 0.75rem 1rem;
+      border-radius: 7px;
+      margin-bottom: 1.2rem;
+      font-size: 0.88rem;
+      font-weight: 500;
+    }
+
+    .alert-error { background: rgba(240,90,90,0.12); border: 1px solid var(--danger); color: var(--danger); }
+
+    /* ── Empty state ────────────────────────────────── */
+    .empty {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--muted);
+    }
+
+    .empty-icon  { font-size: 3rem; margin-bottom: 1rem; }
+    .empty h3    { font-family: var(--font-head); font-size: 1.3rem; color: var(--text); margin-bottom: 0.5rem; }
+
+    /* ── Badge ──────────────────────────────────────── */
+    .badge {
+      display: inline-block;
+      background: rgba(232,197,71,0.12);
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.2rem 0.55rem;
+      border-radius: 99px;
+      letter-spacing: 0.04em;
+      margin-left: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-brand" href="{{ url_for('index') }}">ContactVault</a>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}"
+       class="{{ 'active' if request.endpoint == 'index' else '' }}">All Contacts</a>
+    <a href="{{ url_for('add_contact') }}"
+       class="{{ 'active' if request.endpoint == 'add_contact' else '' }}">+ Add Contact</a>
+  </div>
+</nav>
+
+<div class="container">
+  {% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

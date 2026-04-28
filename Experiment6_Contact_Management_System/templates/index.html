@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% block title %}All Contacts – ContactVault{% endblock %}
+
+{% block content %}
+
+<h1>Contacts <span class="badge">{{ contacts|length }}</span></h1>
+<p class="page-subtitle">Your personal address book, always at hand.</p>
+
+<!-- Search Form -->
+<form method="GET" action="{{ url_for('index') }}" class="search-row">
+  <input
+    type="text"
+    name="q"
+    placeholder="Search by name or phone…"
+    value="{{ query }}"
+    autofocus
+  />
+  <button type="submit" class="btn btn-primary">Search</button>
+  {% if query %}
+    <a href="{{ url_for('index') }}" class="btn btn-edit">Clear</a>
+  {% endif %}
+  <a href="{{ url_for('add_contact') }}" class="btn btn-primary" style="margin-left:auto;">
+    + Add Contact
+  </a>
+</form>
+
+<!-- Contact Table -->
+{% if contacts %}
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for contact in contacts %}
+      <tr>
+        <td style="color:var(--muted);font-size:0.8rem;">{{ loop.index }}</td>
+        <td class="td-name">{{ contact.name }}</td>
+        <td class="td-phone">{{ contact.phone }}</td>
+        <td class="td-email">{{ contact.email }}</td>
+        <td>
+          <!-- Edit button -->
+          <a href="{{ url_for('edit_contact', contact_id=contact.id) }}"
+             class="btn btn-edit btn-sm">✎ Edit</a>
+
+          <!-- Delete form (POST for safety) -->
+          <form method="POST"
+                action="{{ url_for('delete_contact', contact_id=contact.id) }}"
+                style="display:inline;"
+                onsubmit="return confirm('Delete {{ contact.name }}?')">
+            <button type="submit" class="btn btn-danger btn-sm">✕ Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% else %}
+<!-- Empty state -->
+<div class="card">
+  <div class="empty">
+    <div class="empty-icon">📭</div>
+    <h3>{{ "No results found" if query else "No contacts yet" }}</h3>
+    <p>{{ 'Try a different search term.' if query else 'Add your first contact to get started.' }}</p>
+    {% if not query %}
+      <a href="{{ url_for('add_contact') }}" class="btn btn-primary" style="margin-top:1.2rem;">
+        + Add Contact
+      </a>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}
