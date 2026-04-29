@@ -1,0 +1,136 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="breadcrumb">
+      <a href="{{ url_for('index') }}">Home</a> /
+      <a href="{{ url_for('products') }}">Products</a> /
+      {{ product.name }}
+    </div>
+
+    <div class="detail-layout">
+      <!-- Left: Image -->
+      <div class="detail-left">
+        <div class="detail-img-wrap">
+          {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+            <div class="detail-img-placeholder" style="display:none">
+              {% if 'mri' in product.name.lower() %}🔬
+              {% elif 'ct' in product.name.lower() %}🔭
+              {% elif 'ventilator' in product.name.lower() %}💨
+              {% elif 'x-ray' in product.name.lower() %}📡
+              {% elif 'ultrasound' in product.name.lower() %}🔊
+              {% else %}🏥{% endif %}
+            </div>
+          {% else %}
+            <div class="detail-img-placeholder">🏥</div>
+          {% endif %}
+        </div>
+        <div class="detail-meta">
+          <div class="meta-row"><span>Category</span><strong>{{ product.category }}</strong></div>
+          <div class="meta-row">
+            <span>Availability</span>
+            <strong class="{% if product.availability %}text-green{% else %}text-red{% endif %}">
+              {{ 'In Stock' if product.availability else 'On Order' }}
+            </strong>
+          </div>
+          <div class="meta-row"><span>Pricing</span><strong>Quote on Request</strong></div>
+        </div>
+        <a href="{{ url_for('contact') }}?product={{ product.name }}" class="btn-primary w-full mt-2">
+          📋 Request a Quote
+        </a>
+      </div>
+
+      <!-- Right: Details -->
+      <div class="detail-right">
+        <span class="product-cat">{{ product.category }}</span>
+        <h1 class="detail-title">{{ product.name }}</h1>
+        <p class="detail-desc">{{ product.description }}</p>
+
+        <!-- Feature Checklist -->
+        {% set features = product.get_features() %}
+        {% if features %}
+        <div class="detail-features">
+          <h3>Key Features</h3>
+          <ul class="feature-list feature-list-lg">
+            {% for feat in features %}
+            <li><span class="feat-check">✓</span>{{ feat }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        <!-- Specs Table -->
+        {% set specs = product.get_specs() %}
+        {% if specs %}
+        <div class="specs-table-wrap">
+          <h3>Technical Specifications</h3>
+          <table class="specs-table">
+            <thead><tr><th>Parameter</th><th>Value</th></tr></thead>
+            <tbody>
+              {% for k, v in specs.items() %}
+              <tr><td>{{ k }}</td><td>{{ v }}</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% endif %}
+
+        <div class="detail-notice">
+          <div class="notice-icon">ℹ️</div>
+          <div>
+            <strong>Pricing Policy:</strong> All our equipment is priced on a quote basis.
+            Submit an inquiry and our sales team will respond within 24 hours.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    {% if related %}
+    <div class="related-section">
+      <h2>Related Equipment</h2>
+      <div class="ref-product-grid ref-grid-3col">
+        {% for p in related %}
+        {% set features = p.get_features() %}
+        <div class="ref-card">
+          <div class="ref-card-img">
+            {% if p.image_url %}
+              <img src="{{ p.image_url }}" alt="{{ p.name }}" loading="lazy"
+                   onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+              <div class="ref-img-fallback" style="display:none">🏥</div>
+            {% else %}
+              <div class="ref-img-fallback">🏥</div>
+            {% endif %}
+            <span class="ref-cat-badge">{{ p.category }}</span>
+          </div>
+          <div class="ref-card-body">
+            <h3 class="ref-card-title">{{ p.name }}</h3>
+            <p class="ref-card-desc">{{ p.description[:100] }}…</p>
+            {% if features %}
+            <ul class="feature-list">
+              {% for feat in features %}
+              {% if loop.index <= 3 %}
+              <li><span class="feat-check">✓</span>{{ feat }}</li>
+              {% endif %}
+              {% endfor %}
+            </ul>
+            {% endif %}
+            <div class="ref-card-footer">
+              <div class="quote-label"><span class="quote-icon">📋</span><span>Quote on Request</span></div>
+              <div class="ref-card-actions">
+                <a href="{{ url_for('product_detail', product_id=p.id) }}" class="btn-sm-primary">View</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+{% endblock %}

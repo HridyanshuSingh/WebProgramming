@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Manage Products{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-header">
+      <h1>🔬 Products</h1>
+      <div style="display:flex;gap:1rem">
+        <a href="{{ url_for('admin_add_product') }}" class="btn-primary">➕ Add Product</a>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn-sm-ghost">← Dashboard</a>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Category</th><th>Available</th><th>Tags</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+          {% for p in products %}
+          <tr>
+            <td>{{ p.id }}</td>
+            <td>{{ p.name }}</td>
+            <td>{{ p.category }}</td>
+            <td>
+              <span class="status-badge {% if p.availability %}status-new{% else %}badge-unavail{% endif %}">
+                {{ 'Yes' if p.availability else 'No' }}
+              </span>
+            </td>
+            <td class="truncate">{{ p.tags or '—' }}</td>
+            <td style="display:flex;gap:.5rem">
+              <a href="{{ url_for('admin_edit_product', pid=p.id) }}" class="btn-sm-primary">Edit</a>
+              <form method="POST" action="{{ url_for('admin_delete_product', pid=p.id) }}"
+                    onsubmit="return confirm('Delete {{ p.name }}?')">
+                <button type="submit" class="btn-danger-sm">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -1,0 +1,83 @@
+{% extends "base.html" %}
+{% block title %}Contact & Quote{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <h1>Request a Quotation</h1>
+    <p>Fill the form below — our team will respond within 24 business hours.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-layout">
+
+      <!-- Form -->
+      <div class="contact-form-wrap">
+        <h2>Inquiry Form</h2>
+        <form method="POST" class="inquiry-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name <span class="req">*</span></label>
+              <input type="text" name="name" required placeholder="Dr. / Mr. / Ms."/>
+            </div>
+            <div class="form-group">
+              <label>Email Address <span class="req">*</span></label>
+              <input type="email" name="email" required placeholder="you@hospital.com"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Phone Number</label>
+              <input type="tel" name="phone" placeholder="+91 9876543210"/>
+            </div>
+            <div class="form-group">
+              <label>Equipment of Interest</label>
+              <select name="product">
+                <option value="">— Select Equipment —</option>
+                {% for p in products %}
+                <option value="{{ p.name }}" {% if request.args.get('product')==p.name %}selected{% endif %}>{{ p.name }}</option>
+                {% endfor %}
+                <option value="Other / Multiple">Other / Multiple</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Message / Requirements <span class="req">*</span></label>
+            <textarea name="message" rows="5" required
+              placeholder="Describe your hospital's requirements — quantity, department, budget range, timeline, etc."></textarea>
+          </div>
+          <button type="submit" class="btn-primary w-full">Submit Inquiry →</button>
+        </form>
+      </div>
+
+      <!-- Sidebar -->
+      <aside class="contact-info">
+        <h3>Get in Touch</h3>
+        <div class="info-item">
+          <div class="info-icon">📍</div>
+          <div>Medical Equipment Zone, Okhla Phase III,<br>New Delhi – 110020, India</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">📞</div>
+          <div>+91-11-4567-8900<br>+91-98765-43210 (Mobile)</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">📧</div>
+          <div>sales@mediequippro.com<br>support@mediequippro.com</div>
+        </div>
+        <div class="info-item">
+          <div class="info-icon">🕐</div>
+          <div>Mon – Sat: 9:00 AM – 6:00 PM<br>Emergency support: 24/7</div>
+        </div>
+        <div class="info-notice">
+          <strong>💡 Did you know?</strong> You can also chat with MediBot (bottom-right) to quickly
+          get information about any equipment before submitting an inquiry.
+        </div>
+      </aside>
+
+    </div>
+  </div>
+</section>
+{% endblock %}

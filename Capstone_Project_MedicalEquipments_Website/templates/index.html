@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🏥 Trusted by 500+ Hospitals Across India</div>
+    <h1>Advanced Medical<br><span class="hero-highlight">Equipment Solutions</span></h1>
+    <p class="hero-sub">
+      Supplying hospital-grade MRI, CT Scanners, Ventilators, and Digital X-Ray Systems
+      to healthcare institutions nationwide.
+    </p>
+    <div class="hero-cta">
+      <a href="{{ url_for('products') }}" class="btn-primary">Browse Equipment</a>
+      <a href="{{ url_for('contact') }}" class="btn-ghost">Request a Quote →</a>
+    </div>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><strong>500+</strong><span>Hospitals Served</span></div>
+    <div class="stat"><strong>50+</strong><span>Equipment Models</span></div>
+    <div class="stat"><strong>24/7</strong><span>Technical Support</span></div>
+    <div class="stat"><strong>15+</strong><span>Years Experience</span></div>
+  </div>
+</section>
+
+<!-- CATEGORIES -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <h2>Equipment Categories</h2>
+      <p>Hospital-grade solutions for every department</p>
+    </div>
+    <div class="category-grid">
+      <a href="{{ url_for('products', category='Imaging') }}" class="cat-card cat-imaging">
+        <div class="cat-icon">🔬</div>
+        <h3>Imaging Systems</h3>
+        <p>MRI, CT Scan, X-Ray, Ultrasound</p>
+      </a>
+      <a href="{{ url_for('products', category='Critical Care') }}" class="cat-card cat-critical">
+        <div class="cat-icon">💨</div>
+        <h3>Critical Care</h3>
+        <p>Ventilators, Patient Monitors</p>
+      </a>
+      <a href="{{ url_for('products', category='Radiology') }}" class="cat-card cat-radiology">
+        <div class="cat-icon">📡</div>
+        <h3>Radiology</h3>
+        <p>Digital X-Ray, PACS Systems</p>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS — Reference-style cards with real images + feature checklist -->
+<section class="section section-alt">
+  <div class="container">
+    <div class="section-header">
+      <h2>Our Medical Equipment</h2>
+      <p>All equipment is quote-based — contact us for a tailored offer.</p>
+    </div>
+
+    <div class="ref-product-grid">
+      {% for p in products %}
+      {% set features = p.get_features() %}
+      <div class="ref-card">
+        <div class="ref-card-img">
+          {% if p.image_url %}
+            <img src="{{ p.image_url }}" alt="{{ p.name }}" loading="lazy"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+            <div class="ref-img-fallback" style="display:none">
+              {% if 'mri' in p.name.lower() %}🔬
+              {% elif 'ct' in p.name.lower() %}🔭
+              {% elif 'ventilator' in p.name.lower() %}💨
+              {% elif 'x-ray' in p.name.lower() or 'xray' in p.name.lower() %}📡
+              {% elif 'ultrasound' in p.name.lower() %}🔊
+              {% else %}🏥{% endif %}
+            </div>
+          {% else %}
+            <div class="ref-img-fallback">🏥</div>
+          {% endif %}
+          <span class="ref-cat-badge">{{ p.category }}</span>
+        </div>
+        <div class="ref-card-body">
+          <h3 class="ref-card-title">{{ p.name }}</h3>
+          <p class="ref-card-desc">{{ p.description[:115] }}…</p>
+          {% if features %}
+          <ul class="feature-list">
+            {% for feat in features %}
+            <li><span class="feat-check">✓</span>{{ feat }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <div class="ref-card-footer">
+            <div class="quote-label">
+              <span class="quote-icon">📋</span>
+              <span>Quote on Request</span>
+            </div>
+            <div class="ref-card-actions">
+              <a href="{{ url_for('product_detail', product_id=p.id) }}" class="btn-sm-ghost">Details</a>
+              <a href="{{ url_for('contact') }}?product={{ p.name }}" class="btn-sm-primary">Get Quote</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section">
+  <div class="container">
+    <div class="section-header"><h2>Why Choose MediEquip Pro?</h2></div>
+    <div class="why-grid">
+      <div class="why-card">
+        <div class="why-icon">🏆</div>
+        <h3>Certified Quality</h3>
+        <p>CE, ISO 13485, and BIS certified for Indian healthcare standards.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🔧</div>
+        <h3>Installation & Training</h3>
+        <p>Full on-site installation, commissioning, and staff training included.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">🛡️</div>
+        <h3>AMC & CMC Support</h3>
+        <p>Annual and Comprehensive Maintenance Contracts available.</p>
+      </div>
+      <div class="why-card">
+        <div class="why-icon">⚡</div>
+        <h3>Pan-India Delivery</h3>
+        <p>Fast delivery and installation across all 28 states.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-banner">
+  <div class="container text-center">
+    <h2>Ready to equip your hospital?</h2>
+    <p>Our team will design a custom solution tailored to your facility's needs.</p>
+    <a href="{{ url_for('contact') }}" class="btn-primary btn-large">Get a Free Quote Today</a>
+  </div>
+</section>
+
+{% endblock %}

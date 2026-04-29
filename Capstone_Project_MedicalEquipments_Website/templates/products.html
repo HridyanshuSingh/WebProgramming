@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+{% block title %}Products{% endblock %}
+
+{% block content %}
+<section class="page-hero">
+  <div class="container">
+    <h1>Medical Equipment Catalog</h1>
+    <p>Hospital-grade machines — request a quote tailored to your facility</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+
+    <!-- Search & Filter Bar -->
+    <form class="filter-bar" method="GET" action="{{ url_for('products') }}">
+      <div class="search-wrap">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search MRI, Ventilator, CT Scan…" class="search-input"/>
+        <button type="submit" class="search-btn">🔍 Search</button>
+      </div>
+      <div class="filter-wrap">
+        <select name="category" class="filter-select" onchange="this.form.submit()">
+          <option value="">All Categories</option>
+          {% for cat in categories %}
+          <option value="{{ cat }}" {% if cat == selected_cat %}selected{% endif %}>{{ cat }}</option>
+          {% endfor %}
+        </select>
+        {% if query or selected_cat %}
+        <a href="{{ url_for('products') }}" class="btn-clear">✕ Clear</a>
+        {% endif %}
+      </div>
+    </form>
+
+    <p class="results-count">
+      Showing <strong>{{ products|length }}</strong> equipment
+      {% if query %} for "<em>{{ query }}</em>"{% endif %}
+      {% if selected_cat %} in <em>{{ selected_cat }}</em>{% endif %}
+    </p>
+
+    {% if products %}
+    <div class="ref-product-grid ref-grid-3col">
+      {% for p in products %}
+      {% set features = p.get_features() %}
+      <div class="ref-card">
+        <div class="ref-card-img">
+          {% if p.image_url %}
+            <img src="{{ p.image_url }}" alt="{{ p.name }}" loading="lazy"
+                 onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"/>
+            <div class="ref-img-fallback" style="display:none">
+              {% if 'mri' in p.name.lower() %}🔬
+              {% elif 'ct' in p.name.lower() %}🔭
+              {% elif 'ventilator' in p.name.lower() %}💨
+              {% elif 'x-ray' in p.name.lower() or 'xray' in p.name.lower() %}📡
+              {% elif 'ultrasound' in p.name.lower() %}🔊
+              {% else %}🏥{% endif %}
+            </div>
+          {% else %}
+            <div class="ref-img-fallback">🏥</div>
+          {% endif %}
+          <span class="ref-cat-badge">{{ p.category }}</span>
+          <span class="ref-avail-dot {% if p.availability %}avail-yes{% else %}avail-no{% endif %}">
+            {{ 'Available' if p.availability else 'On Order' }}
+          </span>
+        </div>
+        <div class="ref-card-body">
+          <h3 class="ref-card-title">{{ p.name }}</h3>
+          <p class="ref-card-desc">{{ p.description[:110] }}…</p>
+          {% if features %}
+          <ul class="feature-list">
+            {% for feat in features %}
+            <li><span class="feat-check">✓</span>{{ feat }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+          <div class="ref-card-footer">
+            <div class="quote-label">
+              <span class="quote-icon">📋</span><span>Quote on Request</span>
+            </div>
+            <div class="ref-card-actions">
+              <a href="{{ url_for('product_detail', product_id=p.id) }}" class="btn-sm-ghost">Details</a>
+              <a href="{{ url_for('contact') }}?product={{ p.name }}" class="btn-sm-primary">Get Quote</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <div class="empty-icon">🔍</div>
+      <h3>No equipment found</h3>
+      <p>Try a different search term or category.</p>
+      <a href="{{ url_for('products') }}" class="btn-primary">Browse All</a>
+    </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

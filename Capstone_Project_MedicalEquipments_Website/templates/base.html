@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}MediEquip Pro{% endblock %} | Hospital-Grade Medical Equipment</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- ── NAVBAR ─────────────────────────────────────────────────────────────── -->
+<nav class="navbar">
+  <div class="nav-inner">
+    <a href="{{ url_for('index') }}" class="brand">
+      <span class="brand-icon">⚕</span>
+      MediEquip <span class="brand-accent">Pro</span>
+    </a>
+    <button class="nav-toggle" id="navToggle" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links" id="navLinks">
+      <li><a href="{{ url_for('index') }}" {% if request.endpoint=='index' %}class="active"{% endif %}>Home</a></li>
+      <li><a href="{{ url_for('products') }}" {% if request.endpoint=='products' %}class="active"{% endif %}>Products</a></li>
+      <li><a href="{{ url_for('about') }}" {% if request.endpoint=='about' %}class="active"{% endif %}>About</a></li>
+      <li><a href="{{ url_for('contact') }}" {% if request.endpoint=='contact' %}class="active"{% endif %}>Contact</a></li>
+      {% if session.get('is_admin') %}
+        <li><a href="{{ url_for('admin_dashboard') }}" class="nav-badge">Admin</a></li>
+      {% endif %}
+      {% if session.get('user_id') %}
+        <li class="nav-user">Hi, {{ session.username }}</li>
+        <li><a href="{{ url_for('logout') }}" class="btn-nav-outline">Logout</a></li>
+      {% else %}
+        <li><a href="{{ url_for('login') }}" class="btn-nav-outline">Login</a></li>
+        <li><a href="{{ url_for('signup') }}" class="btn-nav-fill">Sign Up</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
+
+<!-- ── FLASH MESSAGES ─────────────────────────────────────────────────────── -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="flash-wrap">
+      {% for cat, msg in messages %}
+        <div class="flash flash-{{ cat }}">
+          {{ msg }}
+          <button class="flash-close" onclick="this.parentElement.remove()">✕</button>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- ── MAIN CONTENT ───────────────────────────────────────────────────────── -->
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<!-- ── FOOTER ─────────────────────────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <span class="brand-icon">⚕</span> MediEquip <span class="brand-accent">Pro</span>
+      <p>Supplying hospital-grade medical equipment to healthcare institutions across India.</p>
+    </div>
+    <div class="footer-links">
+      <h4>Quick Links</h4>
+      <a href="{{ url_for('products') }}">Products</a>
+      <a href="{{ url_for('contact') }}">Request a Quote</a>
+      <a href="{{ url_for('about') }}">About Us</a>
+    </div>
+    <div class="footer-contact">
+      <h4>Contact</h4>
+      <p>📍 Medical Zone, New Delhi, India</p>
+      <p>📞 +91-11-4567-8900</p>
+      <p>📧 sales@mediequippro.com</p>
+    </div>
+  </div>
+  <div class="footer-bottom">© 2024 MediEquip Pro. All rights reserved.</div>
+</footer>
+
+<!-- ── CHATBOT FLOATING BUTTON & WIDGET ──────────────────────────────────── -->
+<button class="chat-fab" id="chatFab" title="Chat with MediBot">
+  <span class="chat-fab-icon">💬</span>
+  <span class="chat-fab-label">MediBot</span>
+</button>
+
+<div class="chatbox" id="chatBox">
+  <div class="chat-header">
+    <div class="chat-header-info">
+      <div class="chat-avatar">🤖</div>
+      <div>
+        <strong>MediBot</strong>
+        <small>Medical Equipment Assistant</small>
+      </div>
+    </div>
+    <button id="chatClose" class="chat-close">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot">
+      <div class="msg-bubble">
+        Hello! 👋 I'm MediBot, your MediEquip Pro assistant.<br>
+        Ask me about MRI, CT Scan, Ventilators, or any equipment!
+      </div>
+    </div>
+  </div>
+  <div class="chat-input-area">
+    <input type="text" id="chatInput" placeholder="Type your question…" autocomplete="off"/>
+    <button id="chatSend">➤</button>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

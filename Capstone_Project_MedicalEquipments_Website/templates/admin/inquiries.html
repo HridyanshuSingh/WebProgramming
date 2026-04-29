@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Manage Inquiries{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-header">
+      <h1>📋 Inquiries</h1>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn-sm-ghost">← Dashboard</a>
+    </div>
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Name</th><th>Email</th><th>Phone</th>
+            <th>Equipment</th><th>Message</th><th>Status</th><th>Date</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for inq in inquiries %}
+          <tr>
+            <td>{{ inq.id }}</td>
+            <td>{{ inq.name }}</td>
+            <td>{{ inq.email }}</td>
+            <td>{{ inq.phone or '—' }}</td>
+            <td>{{ inq.product_interest or '—' }}</td>
+            <td class="truncate" title="{{ inq.message }}">{{ inq.message[:60] }}…</td>
+            <td><span class="status-badge status-{{ inq.status.lower().replace(' ', '-') }}">{{ inq.status }}</span></td>
+            <td>{{ inq.created_at.strftime('%d %b %Y') }}</td>
+            <td>
+              <form method="POST" action="{{ url_for('admin_delete_inquiry', iid=inq.id) }}"
+                    onsubmit="return confirm('Delete this inquiry?')">
+                <button type="submit" class="btn-danger-sm">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% else %}
+          <tr><td colspan="9" class="text-center">No inquiries found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

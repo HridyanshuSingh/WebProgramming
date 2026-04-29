@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-header">
+      <h1>👥 Users</h1>
+      <a href="{{ url_for('admin_dashboard') }}" class="btn-sm-ghost">← Dashboard</a>
+    </div>
+    <div class="table-wrap">
+      <table class="admin-table">
+        <thead>
+          <tr><th>#</th><th>Name</th><th>Email</th><th>Phone</th><th>Role</th><th>Joined</th></tr>
+        </thead>
+        <tbody>
+          {% for u in users %}
+          <tr>
+            <td>{{ u.id }}</td>
+            <td>{{ u.name }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.phone or '—' }}</td>
+            <td>
+              <span class="status-badge {% if u.is_admin %}status-new{% else %}status-closed{% endif %}">
+                {{ 'Admin' if u.is_admin else 'User' }}
+              </span>
+            </td>
+            <td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+{% endblock %}

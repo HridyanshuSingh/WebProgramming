@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Product{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container" style="max-width:750px">
+    <div class="admin-header">
+      <h1>{{ action }} Product</h1>
+      <a href="{{ url_for('admin_products') }}" class="btn-sm-ghost">← Back to Products</a>
+    </div>
+
+    <div class="auth-card" style="max-width:100%">
+      <form method="POST">
+        <div class="form-row">
+          <div class="form-group">
+            <label>Product Name <span class="req">*</span></label>
+            <input type="text" name="name" required
+                   value="{{ product.name if product else '' }}"
+                   placeholder="e.g. MRI Machine 3.0T"/>
+          </div>
+          <div class="form-group">
+            <label>Category <span class="req">*</span></label>
+            <select name="category" required>
+              <option value="">— Select —</option>
+              {% for cat in ['Imaging','Critical Care','Radiology','Laboratory','Rehabilitation'] %}
+              <option value="{{ cat }}" {% if product and product.category == cat %}selected{% endif %}>{{ cat }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Image URL <small>(Unsplash or direct photo link)</small></label>
+          <input type="url" name="image_url"
+                 value="{{ product.image_url if product else '' }}"
+                 placeholder="https://images.unsplash.com/photo-..."/>
+          <small class="form-hint">Paste a direct image URL. Leave blank to use emoji fallback.</small>
+        </div>
+
+        <div class="form-group">
+          <label>Description <span class="req">*</span></label>
+          <textarea name="description" rows="3" required>{{ product.description if product else '' }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Features <small>(JSON list — one feature per string)</small></label>
+          <textarea name="features" rows="4"
+                    placeholder='["High resolution imaging", "Low radiation dose", "DICOM compatible"]'>{{ product.features if product else '[]' }}</textarea>
+          <small class="form-hint">Enter as a valid JSON array of strings. These show as checklist items on the card.</small>
+        </div>
+
+        <div class="form-group">
+          <label>Specifications <small>(JSON object)</small></label>
+          <textarea name="specifications" rows="4"
+                    placeholder='{"Tesla": "1.5T", "Weight": "4000 kg"}'>{{ product.specifications if product else '{}' }}</textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Tags <small>(comma-separated)</small></label>
+          <input type="text" name="tags"
+                 value="{{ product.tags if product else '' }}"
+                 placeholder="MRI, imaging, brain, neurology"/>
+        </div>
+
+        <div class="form-group form-check">
+          <label class="check-label">
+            <input type="checkbox" name="availability"
+                   {% if not product or product.availability %}checked{% endif %}/>
+            <span>Mark as Available</span>
+          </label>
+        </div>
+
+        <button type="submit" class="btn-primary w-full">
+          {{ '💾 Save Changes' if action == 'Edit' else '➕ Add Product' }}
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+{% endblock %}

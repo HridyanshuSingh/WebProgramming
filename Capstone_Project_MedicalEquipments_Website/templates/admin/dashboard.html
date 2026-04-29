@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<section class="section">
+  <div class="container">
+    <div class="admin-header">
+      <h1>🛠 Admin Dashboard</h1>
+      <p>Welcome back, <strong>{{ session.username }}</strong></p>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <div class="stat-card stat-blue">
+        <div class="stat-num">{{ stats.users }}</div>
+        <div class="stat-label">Registered Users</div>
+        <a href="{{ url_for('admin_users') }}" class="stat-link">View →</a>
+      </div>
+      <div class="stat-card stat-teal">
+        <div class="stat-num">{{ stats.products }}</div>
+        <div class="stat-label">Products</div>
+        <a href="{{ url_for('admin_products') }}" class="stat-link">View →</a>
+      </div>
+      <div class="stat-card stat-green">
+        <div class="stat-num">{{ stats.inquiries }}</div>
+        <div class="stat-label">Inquiries</div>
+        <a href="{{ url_for('admin_inquiries') }}" class="stat-link">View →</a>
+      </div>
+      <div class="stat-card stat-purple">
+        <div class="stat-num">{{ stats.chats }}</div>
+        <div class="stat-label">Chat Messages</div>
+      </div>
+    </div>
+
+    <!-- Admin Nav -->
+    <div class="admin-nav-cards">
+      <a href="{{ url_for('admin_inquiries') }}" class="admin-nav-card">📋 Manage Inquiries</a>
+      <a href="{{ url_for('admin_products') }}" class="admin-nav-card">🔬 Manage Products</a>
+      <a href="{{ url_for('admin_users') }}" class="admin-nav-card">👥 Manage Users</a>
+      <a href="{{ url_for('admin_add_product') }}" class="admin-nav-card admin-nav-cta">➕ Add New Product</a>
+    </div>
+
+    <!-- Recent Inquiries -->
+    <div class="admin-section">
+      <h2>Recent Inquiries</h2>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr><th>#</th><th>Name</th><th>Email</th><th>Equipment</th><th>Status</th><th>Date</th></tr>
+          </thead>
+          <tbody>
+            {% for inq in recent_inquiries %}
+            <tr>
+              <td>{{ inq.id }}</td>
+              <td>{{ inq.name }}</td>
+              <td>{{ inq.email }}</td>
+              <td>{{ inq.product_interest or '—' }}</td>
+              <td><span class="status-badge status-{{ inq.status.lower().replace(' ', '-') }}">{{ inq.status }}</span></td>
+              <td>{{ inq.created_at.strftime('%d %b %Y') }}</td>
+            </tr>
+            {% else %}
+            <tr><td colspan="6" class="text-center">No inquiries yet.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
